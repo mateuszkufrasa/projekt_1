@@ -1,8 +1,6 @@
 import csv
 import random
 
-from Utilities import Utilities
-
 
 class FileReader():
     def __init__(self):
@@ -44,22 +42,16 @@ class FileReader():
             train = int(train)
             test = int(test)
             valid = int(valid)
+            random.shuffle(filereader)
         except:
             print('Podano niewlasciwe wartosci')
         if train + test + valid == 100:
-            index_range = list(range(len(filereader)))
-            train_indexes = random.sample(index_range, round(train * len(index_range) / 100))  # wybiera liste indeksow dla zespolu treningowego
-            train_set = [filereader[x] for x in train_indexes]
-            filereader = [filereader[x] for x in train_indexes if x not in filereader]
-            index_range = list(range(len(filereader)))
-            test_indexes = random.sample(index_range, round(test * len(index_range) / 100))  # wybiera liste indeksow dla zespolu testowego
-            test_set = [filereader[x] for x in test_indexes]
-            filereader = [filereader[x] for x in test_indexes if x not in filereader]
-            index_range = list(range(len(filereader)))
-            valid_indexes = random.sample(index_range, round(valid * len(index_range) / 100))  # wybiera liste indeksow dla zespolu testowego
-            valid_set = [filereader[x] for x in valid_indexes]
-            filereader = [filereader[x] for x in valid_indexes if x not in filereader]
+            train_set = filereader[0:round(train / 100 * len(filereader))]
+            test_set = filereader[round(train / 100 * len(filereader)):round((train + test) / 100 * len(filereader))]
+            valid_set = filereader[round((train + test) / 100 * len(filereader)):]
+
             print(train_set,test_set,valid_set)
 
         else:
             print('Podano niepoprawne wartosci parametrow')
+            raise AttributeError
