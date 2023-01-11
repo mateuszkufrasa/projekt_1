@@ -14,6 +14,6 @@ def main():
     train, test, valid = input(
             'Podaj rpocentowe proporcje zbioru treningowego, testowego i walidacyjnego: ').split()
     f.split_dataset_into(f.dataset, train, test, valid)
-
+    f.count_decision_class()
 
 main()

@@ -25,6 +25,7 @@ class FileReader():
                         self.dataset.append(row)
             except:
                 print('Błąd wczytywania pliku z nagłówkiem')
+        self.dataset = list(filter(None, self.dataset)) # usuwa pusty wiersz
         return [self.header, self.dataset]
 
     def print_header(self):
@@ -50,8 +51,16 @@ class FileReader():
             test_set = filereader[round(train / 100 * len(filereader)):round((train + test) / 100 * len(filereader))]
             valid_set = filereader[round((train + test) / 100 * len(filereader)):]
 
-            print(train_set,test_set,valid_set)
+            print(train_set, test_set, valid_set)
 
         else:
             print('Podano niepoprawne wartosci parametrow')
             raise AttributeError
+
+    # TODO: poprawic liczenie elementow listy w liscie
+        #  def count_decision_class(self):
+        vals_set = set()
+        for i in self.dataset:
+            vals_set.add(i[4])
+        for el in vals_set:
+            print(el, self.dataset.count(el))
