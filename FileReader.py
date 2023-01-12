@@ -6,6 +6,7 @@ class FileReader():
     def __init__(self):
         self.header = []
         self.dataset = []
+        self.vals_set = set()
 
     def load_dataset(self, file_input, has_header):
         if int(has_header) == 0:
@@ -25,7 +26,7 @@ class FileReader():
                         self.dataset.append(row)
             except:
                 print('Błąd wczytywania pliku z nagłówkiem')
-        self.dataset = list(filter(None, self.dataset)) # usuwa pusty wiersz
+        self.dataset = list(filter(None, self.dataset))  # usuwa pusty wiersz
         return [self.header, self.dataset]
 
     def print_header(self):
@@ -49,18 +50,47 @@ class FileReader():
         if train + test + valid == 100:
             train_set = filereader[0:round(train / 100 * len(filereader))]
             test_set = filereader[round(train / 100 * len(filereader)):round((train + test) / 100 * len(filereader))]
-            valid_set = filereader[round((train + test) / 100 * len(filereader)):]
-
-            print(train_set, test_set, valid_set)
+            valid_set = filereader[round((train + test) / 100 * len(filereader)):round(
+                (train + test + valid) / 100 * len(filereader))]
+            print(
+                f'Zbior treningowy: {len(train_set)} elementow.\nZbior testowy: {len(test_set)} elementow.\nZbior walidacyjny: {len(valid_set)} elementow.')
+            return train_set, test_set, valid_set
 
         else:
             print('Podano niepoprawne wartosci parametrow')
             raise AttributeError
 
-    # TODO: poprawic liczenie elementow listy w liscie
-        #  def count_decision_class(self):
-        vals_set = set()
+    def count_decision_class(self):
         for i in self.dataset:
-            vals_set.add(i[4])
-        for el in vals_set:
-            print(el, self.dataset.count(el))
+            self.vals_set.add(i[4])
+        print(f'Liczba klas decyzyjnych: {len(self.vals_set)}.')
+        for el in self.vals_set:
+            count = 0
+            for i in self.dataset:
+                if i[4] == el:
+                    count += 1
+                else:
+                    pass
+            print(f'Klasa {el}: {count} elementów.')
+
+    def print_elements_for(self, class_name):
+        if class_name.strip() in self.vals_set:
+            for i in self.dataset:
+                if i[4] == class_name:
+                    print(i)
+                else:
+                    pass
+        else:
+            print('Podano złą nazwę klasy')
+
+    # TODO: poprawic zapis do pliku csv
+    def write_to_csv(self):
+        print('Zapis do pliku csv...')
+        with open("export.csv", 'w', newline='') as of:
+            write = csv.writer(of)
+            if len(self.header) > 0:
+                write.writerow(self.header)
+            else:
+                pass
+            write.writerows(self.dataset)
+        print('Zapisano do pliku csv.')

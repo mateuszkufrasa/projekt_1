@@ -13,7 +13,9 @@ def main():
         print('Błędne argumenty')
     train, test, valid = input(
             'Podaj rpocentowe proporcje zbioru treningowego, testowego i walidacyjnego: ').split()
-    f.split_dataset_into(f.dataset, train, test, valid)
+    train, test, valid = f.split_dataset_into(f.dataset, train, test, valid)
     f.count_decision_class()
-
+    class_name = input('Podaj nazwe klasy, ktorej elementy chcesz wydrukowac: ')
+    f.print_elements_for(class_name)
+    f.write_to_csv()
 main()
